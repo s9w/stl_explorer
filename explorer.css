@@ -1,3 +1,8 @@
+/* Always show scrollbar so things don't jump around when filters change */
+body {
+   overflow: scroll;
+ }
+
 .source{
    color: red;
    font-weight: bold;
