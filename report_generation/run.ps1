@@ -30,7 +30,7 @@ New-Item -ItemType Directory -Force -Path reports # Make sure the reports direct
 
 Foreach($header in $std_headers){
    $include_string = "/D i_{0}" -f $header
-   $cl_command = "CL /Od /MDd /D _DEBUG $include_string /std:c++latest /experimental:module /EHsc /nologo /permissive- /W4 /wd4189 /utf-8 /Feout.exe reporter.cpp /link /MACHINE:X64"
+   $cl_command = "CL /Od /MDd /D _DEBUG $include_string /std:c++20 /experimental:module /EHsc /nologo /permissive- /W4 /wd4189 /utf-8 /Feout.exe reporter.cpp /link /MACHINE:X64"
 
    $report_file = "reports\report_{0}.txt" -f $header
    Invoke-Expression $cl_command | Tee-Object $report_file
