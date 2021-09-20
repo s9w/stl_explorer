@@ -1,7 +1,12 @@
 let json_data = cpp20_json_data;
 
+function get_headers(){
+   return Object.keys(json_data);
+}
 
-function construct_node(type, attributes, inner_html){
+
+function construct_node(type, attributes, inner_html)
+{
    let new_el = document.createElement(type);
    for(let key in attributes)
       new_el.setAttribute(key, attributes[key]);
@@ -11,7 +16,8 @@ function construct_node(type, attributes, inner_html){
 }
 
 
-function load_dataset(){
+function load_dataset()
+{
    let list_el = document.getElementById("main_list");
    list_el.textContent = '';
    for(const source_header in json_data){
@@ -24,62 +30,84 @@ function load_dataset(){
 }
 
 
-function is_target_header_included(source_header, target_prompt){
-   const does_include = (header) => header.includes(target_prompt);
-   return json_data[source_header].some(does_include);
+function is_target_header_included(source_header, target_prompt)
+{
+   const does_include_target_prompt = (header) => header.includes(target_prompt);
+   return json_data[source_header].some(does_include_target_prompt);
 }
 
 
-function mark_source_visibility(source_header, visibility){
-   let li_el = document.getElementById(source_header);
-   if(visibility)
-      li_el.classList.remove("hidden");
-   else
-      li_el.classList.add("hidden");
+function clear_all_attributes(attribute)
+{
+   const un_highlight = (el) => el.classList.remove(attribute);
+   document.querySelectorAll(`.${attribute}`).forEach(un_highlight);
 }
 
 
-function unhighlight_all(){
-   const un_highlight = (el) => el.classList.remove("highlighted");
-   document.querySelectorAll(".highlighted").forEach(un_highlight);
-}
-
-
-function highlight_element(element){
+function highlight_element(element)
+{
    element.classList.add("highlighted");
 }
 
 
+function set_row_visililities(header_names)
+{
+   for(const source_header in json_data){
+      let li_el = document.getElementById(source_header);
+      let is_match = header_names.includes(source_header);
+      if(is_match)
+         li_el.classList.remove("hidden");
+      else
+         li_el.classList.add("hidden");
+   }
+}
+
+
+function filter()
+{
+   clear_all_attributes("highlighted");
+   clear_all_attributes("hidden");
+
+   let source_filter = document.getElementById('source').value;
+   let target_filter = document.getElementById('target').value;
+
+   if(source_filter.trim() !== "" && target_filter.trim() !== ""){
+      console.log("both inputs not empty. That shouldn't happen");
+      return;
+   }
+
+   // Source filter -> filter rows
+   if(source_filter.trim() !== ""){
+      let matching = get_headers().filter(header => header.includes(source_filter));
+      set_row_visililities(matching);
+   }
+
+   // Target filter -> filter rows + highlight matches
+   if(target_filter.trim() !== ""){
+      let matching = get_headers().filter(header => is_target_header_included(header, target_filter));
+      set_row_visililities(matching);
+
+      // If target filter is empty, don't highlight matches (because all are matching)
+      if(target_filter.trim() === "")
+         return;
+      for(matching_header of matching){
+         let source_li = document.getElementById(matching_header);
+         const fun = (el) => {if(el.innerHTML.includes(target_filter)) highlight_element(el)};
+         source_li.querySelectorAll(".target").forEach(fun);
+      }
+   }
+}
+
+
 let source_input_handler = function(e) {
-   document.getElementById('target').value = '';
-   unhighlight_all();
-   let prompt = e.target.value;
-   for(const source_header in json_data)
-      mark_source_visibility(source_header, source_header.includes(prompt));
+   document.getElementById('target').value = ''; // Clear the other input
+   filter();
 }
 
 
 let target_input_handler = function(e) {
-   document.getElementById('source').value = '';
-   unhighlight_all();
-   let prompt = e.target.value;
-   if(prompt.trim() === ""){
-      for(const source_header in json_data)
-         mark_source_visibility(source_header, true);
-      return;
-   }
-   for(const source_header in json_data){
-      let is_valid = is_target_header_included(source_header, prompt);
-      mark_source_visibility(source_header, is_valid);
-      if(is_valid){
-         let source_li = document.getElementById(source_header);
-         for (let i = 1; i < source_li.children.length; i++) {
-            if(source_li.children[i].innerHTML.includes(prompt)){
-               highlight_element(source_li.children[i]);
-            }
-         }
-      }
-   }
+   document.getElementById('source').value = ''; // Clear the other input
+   filter();
 }
 
 
@@ -89,6 +117,7 @@ let option_input_handler = function(e) {
    else if(e.target.value === "latest")
       json_data = cpplatest_json_data;
    load_dataset();
+   filter();
 }
 
 
@@ -96,9 +125,9 @@ let option_input_handler = function(e) {
 { 
    let source_el = document.getElementById('source');
    source_el.addEventListener('input', source_input_handler);
+
    let target_el = document.getElementById('target');
    target_el.addEventListener('input', target_input_handler);
-
    
    let option_el = document.getElementById('version_selector');
    option_el.addEventListener('change', option_input_handler);
