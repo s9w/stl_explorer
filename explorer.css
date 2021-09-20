@@ -1,0 +1,39 @@
+.source{
+   color: red;
+   font-weight: bold;
+}
+.highlighted{
+   color: blue;
+   font-weight: bold;
+}
+
+code::before{
+   content: "<";
+}
+code::after{
+   content: ">";
+}
+
+.source::after{
+   content: ">: "
+}
+
+.target:not(:last-child):after{
+   content: ">, "
+}
+
+.hidden{
+   display: none;
+}
+
+ul > *{
+   margin-top: 0.5em;
+}
+
+.input_group{
+   display: flex;
+}
+
+.input_group > *:first-child{
+   min-width: 18em;
+}

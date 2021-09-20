@@ -1,0 +1,29 @@
+<!doctype html>
+
+<html lang="en">
+   <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <title>STL explorer</title>
+      <link rel="stylesheet" href="explorer.css">
+   </head>
+
+   <body>
+      <p>This tool contains information about the C++ header include structure of Visual Studio (v16.11). For more information see the <a href="https://github.com/s9w/stl_explore">GitHub repo</a>. For the complexity and time it takes to include these headers, see <a href="https://github.com/s9w/cpp-lit">cpp-lit</a>.</p>
+      <div class="input_group">
+         <span>Look up what's in this source header:</span>
+         <input type="text" autocomplete="off" id="source" name="source" size="30">
+      </div>
+      <div class="input_group">
+         <span>Look up where this header is included:</span>
+         <input type="text" autocomplete="off" id="target" name="target" size="30">
+      </div>
+      
+      <ul id="main_list"></ul>
+
+      <script src="json.js"></script>
+      <script src="explorer.js"></script>
+   </body>
+
+</html>
+
