@@ -18,10 +18,17 @@
          <span>Look up where this header is included:</span>
          <input type="text" autocomplete="off" id="target" name="target" size="30">
       </div>
+
+      <label for="version_selector">Dataset:</label>
+      <select name="version" id="version_selector">
+         <option value="20" selected>/std:c++20</option>
+         <option value="latest">/std:c++latest</option>
+     </select>
       
       <ul id="main_list"></ul>
 
-      <script src="json.js"></script>
+      <script src="c++20_json.js"></script>
+      <script src="c++latest_json.js"></script>
       <script src="explorer.js"></script>
    </body>
 

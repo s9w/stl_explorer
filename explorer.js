@@ -1,3 +1,29 @@
+let json_data = cpp20_json_data;
+
+function load_dataset(){
+   let list_el = document.getElementById("main_list");
+   list_el.textContent = '';
+   for(const source_header in json_data){
+      var li = document.createElement('li');
+      li.setAttribute('id', `${source_header}`);
+      
+      let code_el = document.createElement('code');
+      code_el.setAttribute('class', `source`);
+      code_el.innerHTML += source_header;
+      // code_el.innerHTML += `&lt;${source_header}&gt;`;
+      li.appendChild(code_el);
+      
+      for(const sub_header of json_data[source_header]){
+         let code_el = document.createElement('code');
+         code_el.setAttribute('class', `target`);
+         code_el.innerHTML += sub_header;
+         li.appendChild(code_el);
+      }
+      
+      list_el.appendChild(li);
+   }
+}
+
 function is_target_header_included(source_header, target_prompt){
    for(const sub_header of json_data[source_header]){
       if(sub_header.includes(target_prompt))
@@ -63,23 +89,14 @@ source_el.addEventListener('input', source_input_handler);
 let target_el = document.getElementById('target');
 target_el.addEventListener('input', target_input_handler);
 
-// var ul = document.getElementById("main_list");
-for(const source_header in json_data){
-   var li = document.createElement('li');
-   li.setAttribute('id', `${source_header}`);
-   
-   let code_el = document.createElement('code');
-   code_el.setAttribute('class', `source`);
-   code_el.innerHTML += source_header;
-   // code_el.innerHTML += `&lt;${source_header}&gt;`;
-   li.appendChild(code_el);
-   
-   for(const sub_header of json_data[source_header]){
-      let code_el = document.createElement('code');
-      code_el.setAttribute('class', `target`);
-      code_el.innerHTML += sub_header;
-      li.appendChild(code_el);
-   }
-   
-   document.getElementById("main_list").appendChild(li);
+let option_input_handler = function(e) {
+   if(e.target.value === "20")
+      json_data = cpp20_json_data;
+   else if(e.target.value === "latest")
+      json_data = cpplatest_json_data;
+   load_dataset();
 }
+let option_el = document.getElementById('version_selector');
+option_el.addEventListener('change', option_input_handler);
+
+load_dataset();
