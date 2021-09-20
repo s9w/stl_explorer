@@ -1,36 +1,34 @@
 let json_data = cpp20_json_data;
 
+
+function construct_node(type, attributes, inner_html){
+   let new_el = document.createElement(type);
+   for(let key in attributes)
+      new_el.setAttribute(key, attributes[key]);
+   if(inner_html !== null)
+      new_el.innerHTML += inner_html;
+   return new_el;
+}
+
+
 function load_dataset(){
    let list_el = document.getElementById("main_list");
    list_el.textContent = '';
    for(const source_header in json_data){
-      var li = document.createElement('li');
-      li.setAttribute('id', `${source_header}`);
-      
-      let code_el = document.createElement('code');
-      code_el.setAttribute('class', `source`);
-      code_el.innerHTML += source_header;
-      // code_el.innerHTML += `&lt;${source_header}&gt;`;
-      li.appendChild(code_el);
-      
-      for(const sub_header of json_data[source_header]){
-         let code_el = document.createElement('code');
-         code_el.setAttribute('class', `target`);
-         code_el.innerHTML += sub_header;
-         li.appendChild(code_el);
-      }
-      
+      let li = construct_node('li', {id: source_header}, null);
+      li.appendChild(construct_node('code', {class: 'source'}, source_header));
+      for(const target_header of json_data[source_header])
+         li.appendChild(construct_node('code', {class: 'target'}, target_header));
       list_el.appendChild(li);
    }
 }
 
+
 function is_target_header_included(source_header, target_prompt){
-   for(const sub_header of json_data[source_header]){
-      if(sub_header.includes(target_prompt))
-         return true;
-   }
-   return false;
+   const does_include = (header) => header.includes(target_prompt);
+   return json_data[source_header].some(does_include);
 }
+
 
 function mark_source_visibility(source_header, visibility){
    let li_el = document.getElementById(source_header);
@@ -40,17 +38,17 @@ function mark_source_visibility(source_header, visibility){
       li_el.classList.add("hidden");
 }
 
-function unhighlight_all(){
-   const highlighted = document.querySelectorAll(".highlighted");
 
-   highlighted.forEach(function(el) {
-      el.classList.remove("highlighted");
-   });
+function unhighlight_all(){
+   const un_highlight = (el) => el.classList.remove("highlighted");
+   document.querySelectorAll(".highlighted").forEach(un_highlight);
 }
+
 
 function highlight_element(element){
    element.classList.add("highlighted");
 }
+
 
 let source_input_handler = function(e) {
    document.getElementById('target').value = '';
@@ -59,6 +57,7 @@ let source_input_handler = function(e) {
    for(const source_header in json_data)
       mark_source_visibility(source_header, source_header.includes(prompt));
 }
+
 
 let target_input_handler = function(e) {
    document.getElementById('source').value = '';
@@ -84,11 +83,6 @@ let target_input_handler = function(e) {
 }
 
 
-let source_el = document.getElementById('source');
-source_el.addEventListener('input', source_input_handler);
-let target_el = document.getElementById('target');
-target_el.addEventListener('input', target_input_handler);
-
 let option_input_handler = function(e) {
    if(e.target.value === "20")
       json_data = cpp20_json_data;
@@ -96,7 +90,19 @@ let option_input_handler = function(e) {
       json_data = cpplatest_json_data;
    load_dataset();
 }
-let option_el = document.getElementById('version_selector');
-option_el.addEventListener('change', option_input_handler);
 
+
+// Event listener setup
+{ 
+   let source_el = document.getElementById('source');
+   source_el.addEventListener('input', source_input_handler);
+   let target_el = document.getElementById('target');
+   target_el.addEventListener('input', target_input_handler);
+
+   
+   let option_el = document.getElementById('version_selector');
+   option_el.addEventListener('change', option_input_handler);
+}
+
+// Initial dataset loading
 load_dataset();
