@@ -1,10 +1,10 @@
 import json
-
-std_headers = ["algorithm","any","array","atomic","barrier","bit","bitset","cassert","cctype","cerrno","cfenv","cfloat","charconv","chrono","cinttypes","climits","clocale","cmath","compare","complex","concepts","condition_variable","coroutine","csetjmp","csignal","cstdarg","cstddef","cstdint","cstdio","cstdlib","cstring","ctime","cuchar","cwchar","cwctype","deque","exception","execution","filesystem","format","forward_list","fstream","functional","future","initializer_list","iomanip","ios","iosfwd","iostream","istream","iterator","latch","limits","list","locale","map","memory","memory_resource","mutex","new","numbers","numeric","optional","ostream","queue","random","ranges","ratio","regex","scoped_allocator","semaphore","set","shared_mutex","source_location","span","sstream","stack","stdexcept","stop_token","streambuf","string","string_view","syncstream","system_error","thread","tuple","type_traits","typeindex","typeinfo","unordered_map","unordered_set","utility","valarray","variant","vector","version"]
+import os
 
 for version in ["c++20", "c++latest"]:
     includes = {}
-    for head in std_headers:
+    for file in sorted(os.listdir('{}'.format(version))):
+        head = file[7:-4]
         includes[head] = []
         path = "{}\\report_{}.txt".format(version, head)
         with open(path, encoding='utf-16-le') as f:
