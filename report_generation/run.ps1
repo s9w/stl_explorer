@@ -15,7 +15,14 @@ function Invoke-CmdScript {
 $vs2019_dir = "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise"
 $vs2022_dir = "C:\Program Files\Microsoft Visual Studio\2022\Preview"
 
-$vcvars_dir = "{0}\VC\Auxiliary\Build\vcvars64.bat" -f $vs2019_dir
+$vs_choice = "2022" # 2019 or 2022
+
+if ($vs_choice -eq "2022"){
+   $vcvars_dir = "{0}\VC\Auxiliary\Build\vcvars64.bat" -f $vs2022_dir
+}
+else{
+   $vcvars_dir = "{0}\VC\Auxiliary\Build\vcvars64.bat" -f $vs2019_dir
+}
 if((-Not (Test-Path env:cvars_invoked)) -And (-Not $env:cvars_invoked)){
    Invoke-CmdScript -script_path $vcvars_dir
    # prevent running that script more than once per session. It's slow and there's an issue with multiple invokations
@@ -31,14 +38,15 @@ $std_headers = "algorithm","any","array","atomic","barrier","bit","bitset","cass
 $std_versions = "c++17","c++20","c++latest"
 
 Foreach($std_version in $std_versions){
-   New-Item -ItemType Directory -Force -Path $std_version
+   $create_path = "vs{0}_{1}" -f $vs_choice, $std_version
+   New-Item -ItemType Directory -Force -Path $create_path
 
    Foreach($header in $std_headers){
       $include_string = "/D i_{0}" -f $header
       $version_string = "/std:{0}" -f $std_version
       $cl_command = "CL /Od /MDd /D _DEBUG $include_string $version_string /experimental:module /EHsc /nologo /permissive- /W4 /wd4189 /utf-8 /Feout.exe reporter.cpp /link /MACHINE:X64"
 
-      $report_file = "{0}\report_{1}.txt" -f $std_version, $header
+      $report_file = "{0}\report_{1}.txt" -f $create_path, $header
       Invoke-Expression $cl_command | Tee-Object $report_file
 
       # Cleanup temporary files

@@ -1,4 +1,4 @@
-let cpp17_json_data = {
+json_data['vs2022_cpp17'] = {
     "algorithm": [
         "algorithm",
         "cfloat",

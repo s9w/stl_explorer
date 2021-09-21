@@ -1,4 +1,4 @@
-let cpplatest_json_data = {
+json_data['vs2019_cpplatest'] = {
     "algorithm": [
         "algorithm",
         "bit",

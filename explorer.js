@@ -1,4 +1,4 @@
-let json_data = cpp20_json_data;
+let dataset = {};
 
 
 function set_id_class(id, classs, state)
@@ -13,7 +13,7 @@ function set_id_class(id, classs, state)
 
 function get_headers()
 {
-   return Object.keys(json_data);
+   return Object.keys(dataset);
 }
 
 
@@ -32,10 +32,10 @@ function load_dataset()
 {
    let list_el = document.getElementById("main_list");
    list_el.textContent = '';
-   for(const source_header in json_data){
+   for(const source_header in dataset){
       let li = construct_node('li', {id: source_header}, null);
       li.appendChild(construct_node('code', {class: 'source'}, source_header));
-      for(const target_header of json_data[source_header])
+      for(const target_header of dataset[source_header])
          li.appendChild(construct_node('code', {class: 'target'}, target_header));
       list_el.appendChild(li);
    }
@@ -45,7 +45,7 @@ function load_dataset()
 function is_target_header_included(source_header, target_prompt)
 {
    const does_include_target_prompt = (header) => header.includes(target_prompt);
-   return json_data[source_header].some(does_include_target_prompt);
+   return dataset[source_header].some(does_include_target_prompt);
 }
 
 
@@ -64,7 +64,7 @@ function highlight_element(element)
 
 function set_row_visililities(header_names)
 {
-   for(const source_header in json_data){
+   for(const source_header in dataset){
       set_id_class(source_header, "hidden", !header_names.includes(source_header));
    }
 }
@@ -126,13 +126,11 @@ let filter_toggle_handler = function() {
 }
 
 
-let option_input_handler = function(e) {
-   if(e.target.value === "17")
-      json_data = cpp17_json_data;
-   else if(e.target.value === "20")
-      json_data = cpp20_json_data;
-   else if(e.target.value === "latest")
-      json_data = cpplatest_json_data;
+let option_input_handler = function() {
+   console.log("option input handler");
+   let dataset_selector_el = document.getElementById('version_selector');
+   dataset = json_data[dataset_selector_el.value];
+
    load_dataset();
    filter();
 }
@@ -153,9 +151,17 @@ let option_input_handler = function(e) {
    hide_el.addEventListener('change', filter_toggle_handler);
 }
 
-// Initial dataset loading
-load_dataset();
-
 // Synchronize initial filter setting with body classes
 filter_toggle_handler();
-filter();
+
+let dataset_selector_el = document.getElementById('version_selector');
+for(const source_header in json_data){
+   let better_name = source_header.replaceAll("cpp", "c++");
+   better_name = better_name.replaceAll("_", " ");
+   better_name = better_name.replaceAll("vs", "VS");
+   let option_el = construct_node('option', {value: source_header}, better_name);
+   if(source_header === "vs2019_cpp20")
+      option_el.selected = "selected";
+   dataset_selector_el.appendChild(option_el);
+   option_input_handler();
+}

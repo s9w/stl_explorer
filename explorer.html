@@ -10,7 +10,7 @@
 
    <body id="body">
       <h1>STL explorer</h1>
-      <p>This tool contains information about the C++ header include structure of Visual Studio (v16.11.3). For more information see the <a href="https://github.com/s9w/stl_explorer">GitHub repo</a>. For the complexity and time it takes to include these headers, see <a href="https://github.com/s9w/cpp-lit">cpp-lit</a>.</p>
+      <p>This tool contains information about the C++ header include structure of Visual Studio (VS2019 16.11.3 and VS2022 17.0 Preview 4.1). For more information see the <a href="https://github.com/s9w/stl_explorer">GitHub repo</a>. For the complexity and time it takes to include these headers, see <a href="https://github.com/s9w/cpp-lit">cpp-lit</a>.</p>
       <div class="input_group">
          <span>Look up what's in this source header:</span>
          <input type="text" autocomplete="off" id="source" name="source" size="30">
@@ -24,16 +24,17 @@
 
       <label for="version_selector">Dataset:</label>
       <select name="version" id="version_selector">
-         <option value="17" selected>/std:c++17</option>
-         <option value="20" selected>/std:c++20</option>
-         <option value="latest">/std:c++latest</option>
      </select>
       
       <ul id="main_list"></ul>
 
-      <script src="c++17_json.js"></script>
-      <script src="c++20_json.js"></script>
-      <script src="c++latest_json.js"></script>
+      <script>json_data = {};</script>
+      <script src="vs2019_c++17_json.js"></script>
+      <script src="vs2019_c++20_json.js"></script>
+      <script src="vs2019_c++latest_json.js"></script>
+      <script src="vs2022_c++17_json.js"></script>
+      <script src="vs2022_c++20_json.js"></script>
+      <script src="vs2022_c++latest_json.js"></script>
       <script src="explorer.js"></script>
    </body>
 
