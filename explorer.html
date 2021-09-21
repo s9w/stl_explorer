@@ -8,7 +8,7 @@
       <link rel="stylesheet" href="explorer.css">
    </head>
 
-   <body>
+   <body id="body">
       <h1>STL explorer</h1>
       <p>This tool contains information about the C++ header include structure of Visual Studio (v16.11). For more information see the <a href="https://github.com/s9w/stl_explorer">GitHub repo</a>. For the complexity and time it takes to include these headers, see <a href="https://github.com/s9w/cpp-lit">cpp-lit</a>.</p>
       <div class="input_group">
@@ -18,6 +18,8 @@
       <div class="input_group">
          <span>Look up where this header is included:</span>
          <input type="text" autocomplete="off" id="target" name="target" size="30">
+         <input type="checkbox" id="hide_filtered" name="hide_filtered" checked>
+         <label for="hide_filtered">Hide unmatching rows</label>
       </div>
 
       <label for="version_selector">Dataset:</label>

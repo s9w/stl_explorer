@@ -30,6 +30,10 @@ code::after{
 .hidden{
    display: none;
 }
+:not(.filter_checked).fade_possible .hidden{
+   display: list-item;
+   opacity: 33%;
+}
 
 ul > *{
    margin-top: 0.5em;
@@ -37,6 +41,7 @@ ul > *{
 
 .input_group{
    display: flex;
+   align-items: center;
 }
 
 .input_group > *:first-child{

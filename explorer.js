@@ -1,6 +1,18 @@
 let json_data = cpp20_json_data;
 
-function get_headers(){
+
+function set_id_class(id, classs, state)
+{
+   let element = document.getElementById(id);
+   if(state)
+      element.classList.add(classs);
+   else
+      element.classList.remove(classs);
+}
+
+
+function get_headers()
+{
    return Object.keys(json_data);
 }
 
@@ -53,12 +65,7 @@ function highlight_element(element)
 function set_row_visililities(header_names)
 {
    for(const source_header in json_data){
-      let li_el = document.getElementById(source_header);
-      let is_match = header_names.includes(source_header);
-      if(is_match)
-         li_el.classList.remove("hidden");
-      else
-         li_el.classList.add("hidden");
+      set_id_class(source_header, "hidden", !header_names.includes(source_header));
    }
 }
 
@@ -75,6 +82,8 @@ function filter()
       console.log("both inputs not empty. That shouldn't happen");
       return;
    }
+
+   set_id_class("body", "fade_possible", target_filter.trim() !== "");
 
    // Source filter -> filter rows
    if(source_filter.trim() !== ""){
@@ -111,6 +120,12 @@ let target_input_handler = function(e) {
 }
 
 
+let filter_toggle_handler = function() {
+   let is_checked = document.getElementById('hide_filtered').checked;
+   set_id_class("body", "filter_checked", is_checked);
+}
+
+
 let option_input_handler = function(e) {
    if(e.target.value === "17")
       json_data = cpp17_json_data;
@@ -133,7 +148,14 @@ let option_input_handler = function(e) {
    
    let option_el = document.getElementById('version_selector');
    option_el.addEventListener('change', option_input_handler);
+
+   let hide_el = document.getElementById('hide_filtered');
+   hide_el.addEventListener('change', filter_toggle_handler);
 }
 
 // Initial dataset loading
 load_dataset();
+
+// Synchronize initial filter setting with body classes
+filter_toggle_handler();
+filter();
