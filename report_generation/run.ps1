@@ -12,17 +12,18 @@ function Invoke-CmdScript {
    }
 }
 
-if((-Not (Test-Path env:cvars_invoked)) -And (-Not $env:cvars_invoked)){
-   $vcvars_dir = .\vswhere.exe -latest -prerelease -property installationPath
-   Write-Output "Using this VS: $vcvars_dir"
-   Read-Host -Prompt "Press Enter to exit"
-   $vcvars_dir = join-path $vcvars_dir 'VC\Auxiliary\Build\vcvars64.bat'
+$vs2019_dir = "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise"
+$vs2022_dir = "C:\Program Files\Microsoft Visual Studio\2022\Preview"
 
+$vcvars_dir = "{0}\VC\Auxiliary\Build\vcvars64.bat" -f $vs2019_dir
+if((-Not (Test-Path env:cvars_invoked)) -And (-Not $env:cvars_invoked)){
    Invoke-CmdScript -script_path $vcvars_dir
    # prevent running that script more than once per session. It's slow and there's an issue with multiple invokations
    $env:cvars_invoked = $true
 }
 
+Write-Output "catalog.productDisplayVersion: $vcvars_dir"
+Read-Host -Prompt "Press Enter to continue"
 
 $std_headers = "algorithm","any","array","atomic","barrier","bit","bitset","cassert","cctype","cerrno","cfenv","cfloat","charconv","chrono","cinttypes","climits","clocale","cmath","compare","complex","concepts","condition_variable","coroutine","csetjmp","csignal","cstdarg","cstddef","cstdint","cstdio","cstdlib","cstring","ctime","cuchar","cwchar","cwctype","deque","exception","execution","filesystem","format","forward_list","fstream","functional","future","initializer_list","iomanip","ios","iosfwd","iostream","istream","iterator","latch","limits","list","locale","map","memory","memory_resource","mutex","new","numbers","numeric","optional","ostream","queue","random","ranges","ratio","regex","scoped_allocator","semaphore","set","shared_mutex","source_location","span","sstream","stack","stdexcept","stop_token","streambuf","string","string_view","syncstream","system_error","thread","tuple","type_traits","typeindex","typeinfo","unordered_map","unordered_set","utility","valarray","variant","vector","version"
 
