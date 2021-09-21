@@ -112,7 +112,9 @@ let target_input_handler = function(e) {
 
 
 let option_input_handler = function(e) {
-   if(e.target.value === "20")
+   if(e.target.value === "17")
+      json_data = cpp17_json_data;
+   else if(e.target.value === "20")
       json_data = cpp20_json_data;
    else if(e.target.value === "latest")
       json_data = cpplatest_json_data;
