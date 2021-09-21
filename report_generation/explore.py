@@ -3,7 +3,8 @@ import os
 from pathlib import Path
 
 current_dir = Path('.')
-versions = [str(dir) for dir in current_dir.iterdir() if dir.is_dir()]
+
+versions = [str(dir) for dir in current_dir.iterdir() if dir.is_dir() and str(dir).startswith("c++")]
 
 cpp_20_headers = ["concepts", "coroutines", "compare", "version", "source_location", "format", "semaphore", "span", "ranges", "bit", "numbers", "syncstream", "stop_token", "latch", "barrier"]
 
@@ -19,10 +20,16 @@ for version in versions:
 
         includes[header] = []
         path = "{}\\report_{}.txt".format(version, header)
-        with open(path, encoding='utf-16-le') as f:
-            for line in f.readlines():
-                if line.startswith("report_in"):
-                    includes[header].append(line[11:-1])
+        try:
+            with open(path, encoding='utf-16-le') as f:
+                for line in f.readlines():
+                    if line.startswith("report_in"):
+                        includes[header].append(line[11:-1])
+        except:
+            print("exception. version: {}, header: {}".format(version, header))
+
+    if len(includes["cassert"]) == 0:
+        includes["cassert"].append("cassert")
 
     # Warn if headers don't include themselves. In particular, <cassert> and <version> are troublemakers
     for key, value in includes.items():
@@ -31,4 +38,4 @@ for version in versions:
 
     sanitized_version = version.replace("+", "p")
     with open("..\{}_json.js".format(version), "w", encoding='utf-8') as f_out:
-        f_out.write("let {}_json_data = {};".format(sanitized_version, json.dumps(includes)))
+        f_out.write("let {}_json_data = {};".format(sanitized_version, json.dumps(includes, indent=4)))
