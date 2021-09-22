@@ -161,9 +161,9 @@ filter_toggle_handler();
 
 let dataset_selector_el = document.getElementById('version_selector');
 for(const source_header in json_data){
-   let better_name = source_header.replaceAll("cpp", "c++");
-   better_name = better_name.replaceAll("_", " ");
-   better_name = better_name.replaceAll("vs", "VS");
+   let better_name = source_header.replace("cpp", "c++");
+   better_name = better_name.replace("_", " ");
+   better_name = better_name.replace("vs", "VS");
    let option_el = construct_node('option', {value: source_header}, better_name);
    if(source_header === "vs2019_cpp20")
       option_el.selected = "selected";
