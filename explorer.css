@@ -19,12 +19,8 @@ code::after{
    content: ">";
 }
 
-.source::after{
-   content: ">: "
-}
-
-.target:not(:last-child):after{
-   content: ">, "
+#main_list{
+   font-family: monospace;
 }
 
 .hidden{

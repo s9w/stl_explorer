@@ -34,9 +34,14 @@ function load_dataset()
    list_el.textContent = '';
    for(const source_header in dataset){
       let li = construct_node('li', {id: source_header}, null);
-      li.appendChild(construct_node('code', {class: 'source'}, source_header));
-      for(const target_header of dataset[source_header])
-         li.appendChild(construct_node('code', {class: 'target'}, target_header));
+      li.appendChild(construct_node('code', {class: 'source code'}, source_header));
+      li.innerHTML += ": ";
+      for (let i = 0; i < dataset[source_header].length; i++) {
+         if(i>0)
+            li.innerHTML += ", ";
+         li.appendChild(construct_node('code', {class: 'target'}, dataset[source_header][i]));
+         
+      }
       list_el.appendChild(li);
    }
 }
